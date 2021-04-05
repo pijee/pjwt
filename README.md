@@ -4,7 +4,7 @@ PJWT is a very tiny golang package to implement and verify JWT Token quickly.
 This is not a library for full manipulation JWT and __do not implements__ full RFC specifications.
 PJWT can just create, valid and extract playload from token. Algorithm for signature is `HMAC512`, you can't change it (except if you modify code btw).
 
-(jwt.io) was used during dev to test tokens.
+[jwt.io](https://jwt.io) was used during dev to test tokens.
 
 ### What pjwt can :
 - create signed token for your app whith `HMAC512`
