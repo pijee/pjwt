@@ -1,4 +1,4 @@
-package pjwt
+package main
 
 import (
 	"crypto/hmac"
