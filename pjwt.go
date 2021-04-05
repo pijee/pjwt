@@ -14,8 +14,6 @@ type header struct {
 	Type string `json:"typ"`
 }
 
-type PJWToken struct {}
-
 func ( t *PJWToken )setHeader() ( string, error ) {
 	data, err := json.Marshal( header{ Alg: "HS512", Type: "JWT" } )
 	if err != nil { return "", err }
