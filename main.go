@@ -16,18 +16,21 @@ type header struct {
 
 type PJWToken struct {}
 
+// Create formated header for token
 func ( t *PJWToken )setHeader() ( string, error ) {
 	data, err := json.Marshal( header{ Alg: "HS512", Type: "JWT" } )
 	if err != nil { return "", err }
 	return base64.RawURLEncoding.EncodeToString( data ), nil
 }
 
+// Create playload from json struct pointer
 func ( t *PJWToken )setPlayload( i interface{} )  ( string, error ){
 	data, err := json.Marshal( i )
 	if err != nil { return "", err }
 	return base64.RawStdEncoding.EncodeToString( data ), nil
 }
 
+// Forge final token with header, playload and signature
 func ( t *PJWToken )forge( head, playload string, key []byte ) string {
 	src := fmt.Sprintf( "%s.%s", head, playload )
 	h := hmac.New( sha512.New, key )
@@ -36,6 +39,7 @@ func ( t *PJWToken )forge( head, playload string, key []byte ) string {
 	return fmt.Sprintf( "%s.%s", src, sha )
 }
 
+// Public function who create and return token string
 func ( t *PJWToken )CreateToken( i interface{}, key []byte ) ( string, error ) {
 	header, err := t.setHeader()
 	if err != nil { return "", fmt.Errorf( "CreateToken::setHeader() error : %s", err ) }
@@ -44,6 +48,7 @@ func ( t *PJWToken )CreateToken( i interface{}, key []byte ) ( string, error ) {
 	return t.forge( header, playload, key ), nil
 }
 
+// Validate token from string (ex Authorization header bearer)
 func ( t *PJWToken )ValidToken( bearer string, key []byte ) bool {
 	parts := strings.Split( bearer, "." )
 	if len(parts) != 3 { return false }
@@ -51,6 +56,7 @@ func ( t *PJWToken )ValidToken( bearer string, key []byte ) bool {
 	return t.forge( parts[0], parts[1], key ) == bearer
 }
 
+// Parse playload and paste result into interface pointer
 func ( t *PJWToken )ExtractPlayloadFromToken( bearer string, i interface{} ) error{
 	parts := strings.Split( bearer, "." )
 	if len(parts) != 3 { return fmt.Errorf( "bearer format error") }
